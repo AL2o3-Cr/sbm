@@ -60,15 +60,29 @@ bool includell(char d, LList *lhead){
     if(indexofll(d,lhead) != -1){return true;}
     return false;
 }
-int llremoveAt(int i, LList *lhead){
+LList* llremoveAt(int i, LList *lhead){
+    if (i<0){
+        i=(-i)%llsize(lhead);
+    }
+    LList *out=lhead;
     LList *work=lhead;
-    for(int j;j<i-1;j++){
+    if(i==0){
+        out=work->next;
+        for(LList *el=work;el->isnend;el=el->next){
+            work=el;
+        }
         work=work->next;
+    }
+    else if(i>1){
+        if(i>llsize(lhead)){i=i%llsize(lhead);}
+        for(int j=0;j<i-1;j++){
+            work=work->next;
+        }
     }
     LList *tofree=work->next;
     work->next = work->next->next;
     free(tofree);
-    return 0;
+    return out;
 }
 LList* copyll(LList *from){
     LList *workf=from;
@@ -102,4 +116,15 @@ LList* maxtimes(LList *lhead){
         if(el->times > max->times){max=el;}
     }
     return max;
+}
+LList* balancellmax2minCopy(LList *lhead){
+    LList *copyin =copyll(lhead);
+    LList *llout =crllvoid();
+    LList *max;
+    for(int i=0;i<llsize(lhead);i++){
+        max=maxtimes(copyin);
+        lladd(max->data,llout)->times=max->times;
+        copyin =llremoveAt(indexofll(max->data,copyin),copyin);
+    }
+    return llout;
 }

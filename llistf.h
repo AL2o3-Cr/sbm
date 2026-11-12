@@ -10,9 +10,10 @@ LList* llat(int i, LList *lhead);
 int llsize(LList *lhead);
 int indexofll(char d, LList *lhead);
 bool includell(char d, LList *lhead);
-int llremoveAt(int i, LList *lhead);
+LList* llremoveAt(int i, LList *lhead);
 LList* copyll(LList *from);
 int ll2arr(LList *lhead, char (*result)[]);
 LList* mintimes(LList *lhead);
 LList* maxtimes(LList *lhead);
+LList* balancellmax2minCopy(LList *lhead);
 #endif

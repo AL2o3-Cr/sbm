@@ -1,30 +1,31 @@
 #include <stdlib.h>
 #include "LList.h"
+#include "llistf.h"
 
 
 LList* crllvoid(){
     LList * newn = (LList*)malloc(sizeof(LList));
-    newn->data = NULL;
+    newn->isnend=false;
     newn->next = newn;
     return newn;
 }
 LList* crll(char d){
     LList * newn = (LList*)malloc(sizeof(LList));
-    *(newn->data) = d;
-    newn->next = (LList*)malloc(sizeof(LList));
-    newn->next->data = NULL;
-    newn->next->next = newn;
+    newn->isnend=true;
+    newn->data = d;
+    newn->next=crllvoid();
+    newn->next->next=newn;
     return newn;
 }
 LList* lladd(char d, LList *lhead){
     LList *work=lhead;
-    while(work->data != NULL){
+    while(work->isnend){
         work=work->next;
     }
-    *(work->data) = d;
-    work->next =(LList*)malloc(sizeof(LList));
-    work->next->data = NULL;
-    work->next->next = lhead;
+    work->data = d;
+    work->isnend=true;
+    work->next=crllvoid();
+    work->next->next=lhead;
     return work;
 }
 LList* llat(int i, LList *lhead){
@@ -37,7 +38,7 @@ LList* llat(int i, LList *lhead){
 int llsize(LList *lhead){
     LList *work=lhead;
     int count =0;
-    while(work->data != NULL){
+    while(work->isnend){
         work=work->next;
         count++;
     }
@@ -46,8 +47,8 @@ int llsize(LList *lhead){
 int indexofll(char d, LList *lhead){
     LList *work=lhead;
     int count =0;
-    while(work->data != NULL){
-        if(*(work->data)==d){
+    while(work->isnend){
+        if(work->data==d){
             return count;
         }
         work=work->next;
@@ -71,11 +72,11 @@ int llremoveAt(int i, LList *lhead){
 }
 LList* copyll(LList *from){
     LList *workf=from;
-    LList *to = crll(*(workf->data));
+    LList *to = crll(workf->data);
     to->times=workf->times;
     workf=workf->next;
-    while(workf->data != NULL){
-        lladd(*(workf->data),to)->times=workf->times;
+    while(workf->isnend){
+        lladd(workf->data,to)->times=workf->times;
         workf=workf->next;
     }
     return to;
@@ -83,21 +84,21 @@ LList* copyll(LList *from){
 int ll2arr(LList *lhead, char (*result)[]){
     LList *work=lhead;
     int i=0;
-    while(work->data != NULL){
-        (*result)[i]=*(work->data);
+    while(work->isnend){
+        (*result)[i]=work->data;
         work=work->next; i++;
     }
 }
 LList* mintimes(LList *lhead){
     LList *min =lhead;
-    for(LList *el=lhead;el->data != NULL;el=el->next){
+    for(LList *el=lhead;el->isnend;el=el->next){
         if(el->times < min->times){min=el;}
     }
     return min;
 }
 LList* maxtimes(LList *lhead){
     LList *max =lhead;
-    for(LList *el=lhead;el->data != NULL;el=el->next){
+    for(LList *el=lhead;el->isnend;el=el->next){
         if(el->times > max->times){max=el;}
     }
     return max;

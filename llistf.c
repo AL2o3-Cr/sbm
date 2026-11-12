@@ -88,13 +88,17 @@ int ll2arr(LList *lhead, char (*result)[]){
         work=work->next; i++;
     }
 }
-LList* llbalance(LList *lhead){
-    LList *balanced=crllvoid();
-    LList *work= copyll(lhead);
-    LList *max;
+LList* mintimes(LList *lhead){
+    LList *min =lhead;
+    for(LList *el=lhead;el->data != NULL;el=el->next){
+        if(el->times < min->times){min=el;}
+    }
+    return min;
+}
+LList* maxtimes(LList *lhead){
+    LList *max =lhead;
     for(LList *el=lhead;el->data != NULL;el=el->next){
         if(el->times > max->times){max=el;}
-
     }
-    return balanced;
+    return max;
 }

@@ -17,18 +17,49 @@ enum Choice{
 
 typedef struct NodeTree{
     char data;
+    bool isvoidroot;
     struct NodeTree * left;
     struct NodeTree * right;
-} BinTreeNode;
+} BinTree;
 
-BinTreeNode* crn(char d){
-    BinTreeNode* newn = (BinTreeNode*)malloc(sizeof(BinTreeNode));
+BinTree* crtree(char d){
+    BinTree* newn = (BinTree*)malloc(sizeof(BinTree));
     newn->data=d;
+    newn->isvoidroot=false;
     newn->left=newn->right=NULL;
     return newn;
 }
-
-
+BinTree* crtreeVoidroot(){
+    BinTree *newn = (BinTree*)malloc(sizeof(BinTree));
+    newn->isvoidroot=true;
+    newn->left=newn->right=NULL;
+    return newn;
+}
+BinTree* mergetreeWithVRoot(BinTree *left,BinTree *right){
+    BinTree *newn = crtreeVoidroot();
+    newn->left=left; newn->right=right;
+    return newn;
+}
+int countvrootinarr(int size,BinTree *(ptrs)[]){
+    int j=0;
+    for(int i=0;i<size;i++){
+        if(ptrs[i]->isvoidroot){
+            j++;
+        }
+    }
+    return j;
+}
+int excludefromArrByisvoidroot(BinTree *(**arr)[],int size){
+    BinTree *(*newarr)[countvrootinarr(size,(**arr))]; (*newarr)[0]=(**arr)[0];
+    int j=1;
+    for(int i=1;i<size;i++){
+        if((**arr)[i]->isvoidroot){
+            (*newarr)[j++] = (**arr)[i];
+        }
+    }
+    (*arr)=newarr;
+    return j;
+}
 
 enum Choice arghandler(int argc, char const *argv[]){
     bool next=false;
@@ -65,6 +96,33 @@ enum Choice arghandler(int argc, char const *argv[]){
     return encordec;
 }
 
+
+BinTree* balancell2tree(LList *ll){
+    LList *balanced = balancellmax2minCopy(ll);
+    BinTree *_nodes[llsize(balanced)];
+    BinTree *(*nodes)[llsize(balanced)] = _nodes;
+    int i=0;
+    for(LList *el=balanced;el->isnend;el=el->next){
+        (*nodes)[i++]=crtree(el->data);
+    }
+    while(true){
+        int size=i--;
+        int j=i;
+        while (i>1){
+            BinTree *left=nodes[i--];
+            BinTree *right=nodes[i--];
+            BinTree *merged = mergetreeWithVRoot(left,right);
+            (*nodes)[j--]=merged;
+        }
+        int newsize=countvrootinarr(size,*nodes);
+        excludefromArrByisvoidroot(&nodes,size);
+        if(newsize==1){break;}
+        i=newsize+1;
+    }
+    BinTree *fin=mergetreeWithVRoot((*nodes)[0],(*nodes)[1]);
+    return fin;
+}
+
 void decode(){
     return;
 }
@@ -80,7 +138,7 @@ void encode(){
         i++;
     }
     /**/
-    LList *balanced = llbalance(uniq);
+    BinTree *ntree = balancell2tree(uniq);
 }
 
 int main(int argc, char const *argv[])

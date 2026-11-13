@@ -128,3 +128,16 @@ LList* balancellmax2minCopy(LList *lhead){
     }
     return llout;
 }
+LList* llreverse(LList *lhead){
+    int size = llsize(lhead);
+    LList *ptrs[size];
+    LList *end = ptrs[size-1]->next;
+    for (int i = 0; i < size; i++){
+        ptrs[i] = llat(i,lhead);
+    }
+    for(int i=size-1;i>=0;i--){
+        ptrs[i]->next->next=ptrs[i];
+    }
+    ptrs[0]->next = end;
+    return ptrs[size-1];
+}

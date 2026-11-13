@@ -16,4 +16,5 @@ int ll2arr(LList *lhead, char (*result)[]);
 LList* mintimes(LList *lhead);
 LList* maxtimes(LList *lhead);
 LList* balancellmax2minCopy(LList *lhead);
+LList* llreverse(LList *lhead);
 #endif
